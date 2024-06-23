@@ -13,42 +13,21 @@ Clone the project
   git clone https://github.com/alexheywood/chatterbox.git
 ```
 
-Go to the client directory
+Client
 
 ```bash
   cd chatroom
-```
-
-Install dependencies
-
-```bash
   npm install
-```
-
-Start the server
-
-```bash
   npm run dev
 ```
 ----
-Go to the server directory
+Server
 
 ```bash
   cd server
-```
-
-Install dependencies
-
-```bash
   npm install
-```
-
-Start the server
-
-```bash
   npm start
 ```
-
 
 
 ## Screenshots
