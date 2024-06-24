@@ -4,7 +4,7 @@ import Col from "react-bootstrap/esm/Col";
 import Row from "react-bootstrap/esm/Row";
 import { SocketContext } from "../comms";
 
-export default function MessageView({ user, chat }) {
+export default function MessageView({ user, chat, room }) {
   const [message, setMessage] = useState("");
 
   const socket = useContext(SocketContext);
@@ -31,6 +31,7 @@ export default function MessageView({ user, chat }) {
       time: getCurrentTime(),
       user: user,
       message: message,
+      room: room
     };
     socket.emit("sendMessage", messageObject);
     setMessage("");
@@ -39,7 +40,7 @@ export default function MessageView({ user, chat }) {
   return (
     <>
       <div className="">
-        <Container className="overflow-auto">
+        <Container className="overflow-auto flex-" style={{flexDirection: "column-reverse"}}>
           <ul className="list-group bg-light border" style={{ height: "70vh" }}>
             {chat.map((item) => {
               return (

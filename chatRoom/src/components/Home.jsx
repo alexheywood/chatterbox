@@ -1,16 +1,25 @@
 import { RiChatSmile2Fill } from "react-icons/ri";
-import { useRef } from "react";
+import { useRef, useCallback, useContext } from "react";
+import { SocketContext } from "../comms";
 
+export default function Home({ submit }) {
+  const socket = useContext(SocketContext);
 
-export default function Home({submit}) {
+  const name = useRef();
+  const room = useRef();
 
+  const sendUsername = useCallback((username, room) => {
+    socket.emit("addUser", username, room);
+  }, []);
 
-    const name = useRef()
-    const room = useRef()
+  function addUser() {
+    sendUsername(name.current.value, room.current.value);
+    submit(name.current.value, room.current.value)
+  }
 
   return (
     <>
-      <section className="vh-100" style={{ backgroundColor: "#8d99ae"}}>
+      <section className="vh-100" style={{ backgroundColor: "#8d99ae" }}>
         <div className="container py-5 h-100">
           <div className="row d-flex justify-content-center align-items-center h-100">
             <div className="col col-xl-10">
@@ -21,14 +30,22 @@ export default function Home({submit}) {
                       src="https://image.freepik.com/vektoren-kostenlos/illustration-des-chatrooms_53876-8482.jpg"
                       alt="login form"
                       className="img-fluid"
-                      style={{ borderRadius: "1rem 0 0 1rem", objectFit: "cover", height: "100%", width: "500px" }}
+                      style={{
+                        borderRadius: "1rem 0 0 1rem",
+                        objectFit: "cover",
+                        height: "100%",
+                        width: "500px",
+                      }}
                     />
                   </div>
                   <div className="col-md-6 col-lg-7 d-flex align-items-center text">
-                    <div className="card-body p-4 p-lg-5 text-black" style={{maxWidth: "600px"}}>
+                    <div
+                      className="card-body p-4 p-lg-5 text-black"
+                      style={{ maxWidth: "600px" }}
+                    >
                       <form>
                         <div className="mb-2 pb-3 text-center ">
-                            <RiChatSmile2Fill color="green" size={30}/>
+                          <RiChatSmile2Fill color="green" size={30} />
                           <span className="fw-bold fs-4">Chatterbox</span>
                         </div>
 
@@ -40,10 +57,7 @@ export default function Home({submit}) {
                         </h5>
 
                         <div data-mdb-input-init className="form-outline mb-4">
-                          <label
-                            className="form-label"
-                            htmlFor="nickname"
-                          >
+                          <label className="form-label" htmlFor="nickname">
                             Nickname
                           </label>
                           <input
@@ -54,14 +68,13 @@ export default function Home({submit}) {
                           />
                         </div>
 
-                        <label
-                            className="form-label"
-                            htmlFor="server"
-                          >
-                            Server Room:
-                          </label>
-                        <div data-mdb-input-init className="form-outline mb-4 input-group">
-                          
+                        <label className="form-label" htmlFor="server">
+                          Server Room:
+                        </label>
+                        <div
+                          data-mdb-input-init
+                          className="form-outline mb-4 input-group"
+                        >
                           <div className="input-group-prepend">
                             <span className="input-group-text" id="server">
                               #
@@ -84,7 +97,9 @@ export default function Home({submit}) {
                             data-mdb-ripple-init
                             className="btn btn-dark btn-lg btn-block"
                             type="button"
-                            onClick={() => {submit(name.current.value, room.current.value)}}
+                            onClick={() => {
+                              addUser(name.current.value, room.current.value);
+                            }}
                           >
                             Join
                           </button>

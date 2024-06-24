@@ -28,7 +28,7 @@ export default function Chat({ username, messages, users, room }) {
               <SideBar users={users} />
             </Col>
             <Col sm={9}>
-              <MessageView user={username} chat={messages} />
+              <MessageView room={room} user={username} chat={messages} />
             </Col>
           </Row>
         </Container>

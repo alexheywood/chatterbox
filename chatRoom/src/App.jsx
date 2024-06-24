@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import NavBar from './components/NavBar';
 import { SocketContext, socket } from './comms.js';
@@ -7,7 +7,6 @@ import Home from './components/Home.jsx';
 
 function App() {
   const [username, setUsername] = useState('')
-  const [users, setUsers] = useState([])
   const [messages, setMessages] = useState([])
   const [count, setCount] = useState(0)
   const [registered, setRegistered] = useState(false)
@@ -20,7 +19,16 @@ function App() {
   setCount(messages.length)
   }, [])
 
-  socket.on("receiveMessage", (msg) => { addMessage(msg)})
+  useEffect( () => { 
+    socket.on("receiveMessage", (msg) => { addMessage(msg)})
+    socket.on('sendRoomList', () => { sendPing ()})
+
+  }, [socket])
+
+  function sendPing() {
+
+    socket.emit('sendDetails', username, room)
+  }
 
   function registerUser(user, room) {
 
@@ -28,15 +36,15 @@ function App() {
     setRoom(room)
     setRegistered(true)
     setMessages([])
-    setUsers([])
-
   }
+
 
   function logout() {
     setUsername("")
     setRoom("")
     setRegistered(false)
     setMessages([])
+    socket.emit('removeUser', user)
   }
 
 
@@ -61,13 +69,11 @@ function App() {
     }
 }
 
-socket.on("receiveMessage", )
-
   return (
     <SocketContext.Provider value={socket}>
     <div className="bg-white">
     { registered ? <NavBar username={username} exit={logout}/> : null }
-    { registered ? <Chat username={username} messages={messages} users={users} room={room}/> :
+    { registered ? <Chat username={username} messages={messages} room={room}/> :
     <Home submit={registerUser}/> }
     </div>
     </SocketContext.Provider>
