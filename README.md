@@ -1,9 +1,6 @@
-
 # Chatterbox
 
 A single page application (SPA) chat room web app that allows multiple clients to talk to one another built with React and Socket.io.
-
-
 
 ## Run Locally
 
@@ -16,11 +13,13 @@ Clone the project
 Client
 
 ```bash
-  cd chatroom
+  cd client
   npm install
   npm run dev
 ```
-----
+
+---
+
 Server
 
 ```bash
@@ -29,9 +28,7 @@ Server
   npm start
 ```
 
-
 ## Screenshots
 
 ![App Homepage](https://i.imgur.com/aTgHYQX.png)
 ![App Chatroom](https://i.imgur.com/ijd2Xgl.png)
-
