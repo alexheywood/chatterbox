@@ -4,7 +4,7 @@ import { RiRadioButtonLine } from "react-icons/ri";
 import { SocketContext } from "../comms";
 import { useContext, useState, useEffect } from "react";
 
-export default function SideBar(props) {
+export default function SideBar() {
   const [userList, setUserList] = useState([]);
 
   const socket = useContext(SocketContext);

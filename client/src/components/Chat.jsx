@@ -6,11 +6,20 @@ import Col from "react-bootstrap/Col";
 import { RiChatThreadLine } from "react-icons/ri";
 import { useEffect, useState, useContext } from "react";
 import { SocketContext } from "../comms";
+import { useWithSound } from "../hooks/useWithSound";
+import pop from "/pop.mp3";
+import { useRef } from "react";
 
 export default function Chat({ username, users, room }) {
   const [messages, setMessages] = useState([]);
 
   const socket = useContext(SocketContext);
+
+  const { playSound } = useWithSound(pop);
+
+  const playNotification = () => {
+    playSound();
+  };
 
   useEffect(() => {
     socket.on("receiveMessage", (msg) => {
@@ -23,6 +32,7 @@ export default function Chat({ username, users, room }) {
       } else {
         setMessages((prevMessages) => [...prevMessages, msg]);
       }
+      playNotification();
     });
 
     return () => {

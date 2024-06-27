@@ -5,30 +5,13 @@ import Row from "react-bootstrap/esm/Row";
 import { SocketContext } from "../comms";
 
 export default function MessageView({ user, room, messages }) {
-  // const [messages, setMessages] = useState([]);
-
   const socket = useContext(SocketContext);
 
   const message = useRef();
 
-  // useEffect(() => {
-  //   socket.on("receiveMessage", (msg) => {
-  //     if (messages.length > 10) {
-  //       setMessages((prevMessages) => {
-  //         const oldMessages = [...prevMessages];
-  //         oldMessages.shift();
-  //         return [...oldMessages, msg];
-  //       });
-  //     } else {
-  //       setMessages((prevMessages) => [...prevMessages, msg]);
-  //     }
-  //   }),
-  //     [socket];
-  // });
-
-  // function messageChange(e) {
-  //   setMessage(e.target.value);
-  // }
+  useEffect(() => {
+    message.current.focus();
+  });
 
   function getCurrentTime() {
     const now = new Date();
@@ -39,7 +22,8 @@ export default function MessageView({ user, room, messages }) {
     return hoursAndMinutes;
   }
 
-  const submitMessage = useCallback(() => {
+  const submitMessage = useCallback((e) => {
+    e.preventDefault();
     if (!message.current.value) {
       return;
     }
@@ -52,6 +36,7 @@ export default function MessageView({ user, room, messages }) {
     };
     socket.emit("sendMessage", messageObject);
     message.current.value = "";
+    message.current.focus();
   }, []);
 
   return (
@@ -98,29 +83,32 @@ export default function MessageView({ user, room, messages }) {
             })}
           </ul>
         </Container>
-        <Container className="my-3">
-          <Row>
-            <Col sm={10}>
-              <div className="mb-3">
-                <input
-                  ref={message}
-                  type="text"
-                  className="form-control"
-                  id="exampleFormControlInput1"
-                  placeholder="Type your message"
-                ></input>
-              </div>
-            </Col>
-            <Col sm={2}>
-              <button
-                type="button"
-                onClick={submitMessage}
-                className="btn btn-primary w-100"
-              >
-                Send
-              </button>
-            </Col>
-          </Row>
+        <Container fluid className="my-3">
+          <form onSubmit={submitMessage}>
+            <Row>
+              <Col sm={10}>
+                <div className="mb-3">
+                  <input
+                    ref={message}
+                    type="text"
+                    className="form-control"
+                    id="exampleFormControlInput1"
+                    placeholder="Type your message"
+                  ></input>
+                </div>
+              </Col>
+              <Col sm={2}>
+                <button
+                  type="submit"
+                  onClick={submitMessage}
+                  onSubmit={submitMessage}
+                  className="btn btn-primary w-100"
+                >
+                  Send
+                </button>
+              </Col>
+            </Row>
+          </form>
         </Container>
       </div>
     </>
