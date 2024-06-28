@@ -13,6 +13,5 @@ export const useWithSound = (audioSource) => {
 
   return {
     playSound,
-    pauseSound,
   };
 };
