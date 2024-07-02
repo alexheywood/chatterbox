@@ -22,28 +22,45 @@ export default function MessageView({ user, room }) {
   };
 
   useEffect(() => {
+    socket.on("userJoined", (user) =>
+      setMessages((prevMessages) => {
+        const oldMessages = [...prevMessages];
+        const notification = {
+          type: "notification-joined",
+          user: user,
+          time: getCurrentTime(),
+        };
+        return [...oldMessages, notification];
+      })
+    );
+
+    socket.on("userLeft", (user) =>
+      setMessages((prevMessages) => {
+        const oldMessages = [...prevMessages];
+        const notification = {
+          type: "notification-left",
+          user: user,
+          time: getCurrentTime(),
+        };
+        return [...oldMessages, notification];
+      })
+    );
+
     socket.on("receiveMessage", (msg) => {
       setSending(false);
-      if (messages.length > 10) {
-        setMessages((prevMessages) => {
-          const oldMessages = [...prevMessages];
-          oldMessages.shift();
-          return [...oldMessages, msg];
-        });
-      } else {
-        setMessages((prevMessages) => [...prevMessages, msg]);
-      }
+      setMessages((prevMessages) => [...prevMessages, msg]);
+
       playNotification();
     });
 
     return () => {
       socket.off("receiveMessage");
     };
-  }, []);
+  }, [socket]);
 
   useEffect(() => {
     message.current.focus();
-  });
+  }, [socket]);
 
   function getCurrentTime() {
     const now = new Date();
@@ -83,13 +100,42 @@ export default function MessageView({ user, room }) {
         >
           <ul className="list-group bg-light border" style={{ height: "70vh" }}>
             {messages.map((item) => {
+              if (item.type == "notification-joined") {
+                return (
+                  <li
+                    key={item.user + "-notification"}
+                    className="list-group-item bg-light"
+                  >
+                    <small className="fw-bold text-center">
+                      {item.user} has joined the chat.
+                    </small>
+                  </li>
+                );
+              }
+
+              if (item.type == "notification-left") {
+                return (
+                  <li
+                    key={item.user + "-notification"}
+                    className="list-group-item bg-light"
+                  >
+                    <small className="fw-bold">
+                      {item.user} has left the chat.
+                    </small>
+                  </li>
+                );
+              }
+
               if (item.user === user) {
                 return (
                   <li
                     key={item.time + item.user + item.message}
                     className="list-group-item bg-light"
                   >
-                    <span className="badge rounded-pill text-bg-success">
+                    <span
+                      style={{ minWidth: "5rem" }}
+                      className="badge rounded-pill text-bg-success"
+                    >
                       {item.user}
                     </span>
                     : {item.message}{" "}
@@ -104,7 +150,10 @@ export default function MessageView({ user, room }) {
                     key={item.time + item.user + item.message}
                     className="list-group-item"
                   >
-                    <span className="badge rounded-pill text-bg-primary">
+                    <span
+                      style={{ minWidth: "5rem" }}
+                      className="badge rounded-pill text-bg-primary"
+                    >
                       {item.user}
                     </span>
                     : {item.message}{" "}

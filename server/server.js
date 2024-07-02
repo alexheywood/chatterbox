@@ -25,6 +25,7 @@ io.on("connection", (socket) => {
       users.set(room, [user]);
     }
     io.to(room).emit("updateUserList", users.get(room));
+    io.to(room).emit("userJoined", user)
   });
 
   socket.on("removeUser", (user, room) => {
@@ -36,6 +37,7 @@ io.on("connection", (socket) => {
       users.set(room, newUsers);
       console.log(users.get(room));
       io.to(room).emit("removeUserFromList", users.get(room));
+      io.to(room).emit("userLeft", user)
     }
   });
 
