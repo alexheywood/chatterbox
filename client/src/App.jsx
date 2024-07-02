@@ -44,7 +44,7 @@ function App() {
 
   return (
     <SocketContext.Provider value={socket}>
-      <div style={{ background: "linear-gradient(90deg, #3c548d, #23396d)" }}>
+      <div style={{ background: "linear-gradient(45deg, #5871e2, #a3b7e6)" }}>
         {registered ? <NavBar username={username} exit={logout} /> : null}
         {registered ? (
           <Chat username={username} room={room} />

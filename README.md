@@ -30,5 +30,5 @@ Server
 
 ## Screenshots
 
-![App Homepage](https://i.imgur.com/aTgHYQX.png)
-![App Chatroom](https://i.imgur.com/ijd2Xgl.png)
+![App Homepage](https://i.imgur.com/77wMTnG.png)
+![App Chatroom](https://i.imgur.com/iCyVZi1.png)

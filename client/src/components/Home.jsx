@@ -39,7 +39,7 @@ export default function Home({ submit }) {
     <>
       <section
         className="vh-100"
-        style={{ background: "linear-gradient(90deg, #3c548d, #23396d)" }}
+        style={{ background: "linear-gradient(45deg, #5871e2, #a3b7e6)" }}
       >
         <div className="container py-5 h-100">
           <div className="row d- flex justify-content-center align-items-center h-100">
