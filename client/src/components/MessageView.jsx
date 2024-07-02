@@ -3,11 +3,43 @@ import Container from "react-bootstrap/esm/Container";
 import Col from "react-bootstrap/esm/Col";
 import Row from "react-bootstrap/esm/Row";
 import { SocketContext } from "../comms";
+import { Circles } from "react-loader-spinner";
+import { useWithSound } from "../hooks/useWithSound";
+import pop from "/pop.mp3";
 
-export default function MessageView({ user, room, messages }) {
+export default function MessageView({ user, room }) {
+  const [sending, setSending] = useState(false);
+  const [messages, setMessages] = useState([]);
+
   const socket = useContext(SocketContext);
 
   const message = useRef();
+
+  const { playSound } = useWithSound(pop);
+
+  const playNotification = () => {
+    playSound();
+  };
+
+  useEffect(() => {
+    socket.on("receiveMessage", (msg) => {
+      setSending(false);
+      if (messages.length > 10) {
+        setMessages((prevMessages) => {
+          const oldMessages = [...prevMessages];
+          oldMessages.shift();
+          return [...oldMessages, msg];
+        });
+      } else {
+        setMessages((prevMessages) => [...prevMessages, msg]);
+      }
+      playNotification();
+    });
+
+    return () => {
+      socket.off("receiveMessage");
+    };
+  }, []);
 
   useEffect(() => {
     message.current.focus();
@@ -27,6 +59,8 @@ export default function MessageView({ user, room, messages }) {
     if (!message.current.value) {
       return;
     }
+
+    setSending(true);
 
     const messageObject = {
       time: getCurrentTime(),
@@ -98,14 +132,26 @@ export default function MessageView({ user, room, messages }) {
                 </div>
               </Col>
               <Col sm={2}>
-                <button
-                  type="submit"
-                  onClick={submitMessage}
-                  onSubmit={submitMessage}
-                  className="btn btn-primary w-100"
-                >
-                  Send
-                </button>
+                {sending ? (
+                  <Circles
+                    height="30"
+                    width="30"
+                    color="#4fa94d"
+                    ariaLabel="circles-loading"
+                    wrapperStyle={{}}
+                    wrapperClass=""
+                    visible={true}
+                  />
+                ) : (
+                  <button
+                    type="submit"
+                    onClick={submitMessage}
+                    onSubmit={submitMessage}
+                    className="btn btn-primary w-100"
+                  >
+                    Send
+                  </button>
+                )}
               </Col>
             </Row>
           </form>
